@@ -11,17 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user-service")
 @RequiredArgsConstructor
 public class UserController {
 
     private final Environment env;
     private final Greeting greeting;
-
     private final UserService userService;
 
     @GetMapping("/welcome")
@@ -30,12 +32,13 @@ public class UserController {
         return greeting.getMessage();
     }
 
-    @GetMapping("/heath_check")
+    @GetMapping("/health_check")
     public String status(){
-        return "It's Working in User Serice";
+        return String.format("It's Working in User Service On PORT %s",
+                env.getProperty("local.server.port"));
     }
 
-    @PostMapping("users")
+    @PostMapping("/users")
     public ResponseEntity<ResponseUser> createUser(@RequestBody @Valid RequestUser requestUser){
         //request vo -> response
         UserDto userDto = UserDto.of(requestUser.getEmail(), requestUser.getName(), requestUser.getPwd());
@@ -44,5 +47,30 @@ public class UserController {
         UserDto signUpDto = userService.createUser(userDto);
 
         return ResponseEntity.status(CREATED).body(ResponseUser.of(signUpDto));
+    }
+
+
+    @GetMapping("/users")
+    public ResponseEntity<List<ResponseUser>> getUsers(){
+        //logic
+        List<UserDto> users = userService.getUserByAll();
+
+        //response
+        List<ResponseUser> response = users.stream()
+                .map(ResponseUser::of)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(OK).body(response);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> get(@PathVariable String userId){
+        //logic
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        //response
+        ResponseUser response = ResponseUser.of(userDto);
+
+        return ResponseEntity.status(OK).body(response);
     }
 }
