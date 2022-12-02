@@ -26,7 +26,7 @@ public class ResponseUser {
     }
 
     public static ResponseUser of(final UserDto userDto) {
-        return new ResponseUser(userDto.getEmail(), userDto.getName(), userDto.getUserId(), null);
+        return new ResponseUser(userDto.getEmail(), userDto.getName(), userDto.getUserId(), userDto.getOrders());
     }
 
 
