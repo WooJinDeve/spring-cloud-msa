@@ -16,7 +16,7 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @NoArgsConstructor(access = PROTECTED)
 public class OrderEntity implements Serializable {
 

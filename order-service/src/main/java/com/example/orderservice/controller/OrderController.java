@@ -30,7 +30,7 @@ public class OrderController {
                 env.getProperty("local.server.port"));
     }
 
-    @PostMapping("/users/{userId]/orders")
+    @PostMapping("/users/{userId}/orders")
     public ResponseEntity<ResponseOrder> createOrder(@RequestBody RequestOrder requestOrder,
                                                      @PathVariable String userId) {
         OrderDto orderDto = OrderDto.builder()
