@@ -5,6 +5,8 @@ import com.example.userservice.domain.UserRepository;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.vo.ResponseOrder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,24 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String username)  {
+        UserEntity userEntity = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
+                true, true, true, true, new ArrayList<>());
+    }
+
+
+    @Override
+    public UserDto getUserDetailsByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return UserDto.of(userEntity);
+    }
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -52,4 +72,5 @@ public class UserServiceImpl implements UserService{
                 .map(UserDto::of)
                 .collect(Collectors.toList());
     }
+
 }
