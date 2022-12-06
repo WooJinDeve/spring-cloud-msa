@@ -35,6 +35,6 @@ greeting:
 gateway:
   ip: 127.0.0.1
 
-token:
-  expiration_time: 86400000
-  secret: dsakldklwkqoclqmcoowjojqojdowjqojdowqjodjqwojcosakcikwqnoo
+#token:
+#  expiration_time: 86400000
+#  secret: dsakldklwkqoclqmcoowjojqojdowjqojdowqjodjqwojcosakcikwqnoo
